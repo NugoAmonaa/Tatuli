@@ -1,10 +1,10 @@
 ﻿namespace Final.Dto
 {
-    public class AddCommentDto
+    public class UpdateCommentDto
     {
+        public int Id { get; set; }
         public int PostID { get; set; }
         public string Content { get; set; }
         public string UserId { get; set; }
-
     }
 }

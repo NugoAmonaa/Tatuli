@@ -1,49 +1,108 @@
 ﻿using Final.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Final.database
-
 {
-
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<User>
     {
-        public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
 
-
-
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
-        {
-            
-        }
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-         
             optionsBuilder.UseSqlServer(ConnectionString);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelbuilder.Entity<User>().HasMany(x => x.Posts).WithOne(x => x.Creator).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.Restrict);
+            base.OnModelCreating(modelBuilder);
 
-            modelbuilder.Entity<User>().HasMany(x => x.Comments).WithOne(x => x.User).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasMany(e => e.Posts)
+                    .WithOne(p => p.Creator)
+                    .HasForeignKey(p => p.CreatorId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-            modelbuilder.Entity<Post>().HasMany(x => x.Comments).WithOne(x=>x.Post).HasForeignKey(x => x.PostID).OnDelete(DeleteBehavior.Cascade);
-            modelbuilder.Entity<Comment>().HasKey(x => x.Id);
-            modelbuilder.Entity<Comment>().Property(x => x.Id).ValueGeneratedOnAdd();
-            modelbuilder.Entity<Post>().HasKey(x => x.Id);
-            modelbuilder.Entity<Post>().Property(x => x.Id).ValueGeneratedOnAdd();
-            modelbuilder.Entity<User>().HasKey(x => x.Id);
-            modelbuilder.Entity<User>().Property(x => x.Id).ValueGeneratedOnAdd();
+                entity.HasMany(e => e.Comments)
+                    .WithOne(c => c.User)
+                    .HasForeignKey(c => c.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
+                entity.HasMany(e => e.Comments)
+                    .WithOne(c => c.Post)
+                    .HasForeignKey(c => c.PostID)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
         }
-        public static string ConnectionString { get; } = "Server=DESKTOP-0INB2UD\\SQLEXPRESS;Database=ForumDatabase2;Trusted_Connection=True;TrustServerCertificate=True";
 
-
+        public static string ConnectionString { get; } = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=tragedia;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
     }
 }
+
+
+//public class DatabaseContext : DbContext
+//{
+//    public DbSet<User> Users { get; set; }
+//    public DbSet<Comment> Comments { get; set; }
+//    public DbSet<Post> Posts { get; set; }
+
+//    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
+
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//    {
+//        optionsBuilder.UseSqlServer(ConnectionString);
+//    }
+
+//    protected override void OnModelCreating(ModelBuilder modelBuilder)
+//    {
+//        modelBuilder.Entity<User>(entity =>
+//        {
+//            entity.HasKey(e => e.Id);
+//            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+//            entity.HasMany(e => e.Posts)
+//                .WithOne(p => p.Creator)
+//                .HasForeignKey(p => p.CreatorId)
+//                .OnDelete(DeleteBehavior.Restrict);
+//            entity.HasMany(e => e.Comments)
+//                .WithOne(c => c.User)
+//                .HasForeignKey(c => c.UserId)
+//                .OnDelete(DeleteBehavior.Restrict);
+//        });
+
+//        modelBuilder.Entity<Post>(entity =>
+//        {
+//            entity.HasKey(e => e.Id);
+//            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+//            entity.HasMany(e => e.Comments)
+//                .WithOne(c => c.Post)
+//                .HasForeignKey(c => c.PostID)
+//                .OnDelete(DeleteBehavior.Cascade);
+//        });
+
+//        modelBuilder.Entity<Comment>(entity =>
+//        {
+//            entity.HasKey(e => e.Id);
+//            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+//        });
+
+//    }
+
+//    public static string ConnectionString { get; } = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=JWTAuthDB;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+//}
+

@@ -1,21 +1,18 @@
-﻿using Final.Enum;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
+﻿using System.Text.Json.Serialization;
+using Final.Enum;
+using Microsoft.AspNetCore.Identity;
 
 namespace Final.Entities
 {
-    public class User
+    public class User : IdentityUser
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public bool IsBanned { get; set; }
         public EUserRole Role { get; set; }
+        [JsonIgnore]
         public ICollection<Post> Posts { get; set; }
+        [JsonIgnore]
         public ICollection<Comment> Comments { get; set; }
     }
 }

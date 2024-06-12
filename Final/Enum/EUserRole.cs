@@ -2,9 +2,9 @@
 {
     public enum EUserRole
     {
-        Administrator ,
+        Administrator = 1 ,
 
 
-        User
+        User = 2
     }
 }

@@ -35,7 +35,7 @@ namespace Final.Repositories
 
         public async Task<List<Comment>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Include(x=>x.User).ToListAsync();
 
 
         }

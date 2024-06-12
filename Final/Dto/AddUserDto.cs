@@ -1,5 +1,4 @@
 ﻿using Final.Enum;
-
 namespace Final.Dto
 {
     public class AddUserDto

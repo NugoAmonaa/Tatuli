@@ -40,9 +40,7 @@ namespace HotelProject.Repository
 
         public async Task<List<Post>> GetPosts()
         {
-            return await _context.Posts.ToListAsync();
-
-
+            return await _context.Posts.Include(x => x.Comments).Include(x=>x.Creator).ToListAsync();
         }
 
         public async Task UpdatePost(Post Post)

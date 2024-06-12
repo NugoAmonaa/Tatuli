@@ -2,9 +2,9 @@
 {
     public enum EState
     {
-        Pending ,
-          Show ,
-      Hide
+        Pending,
+        Show,
+        Hide
 
     }
 }

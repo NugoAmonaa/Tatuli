@@ -3,7 +3,7 @@
     public enum EStatus
     {
         Active,
-      Inactive
+        Inactive
 
     }
 }
