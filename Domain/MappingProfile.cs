@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Final.Domain.Dto;
 using Final.Dto;
 using Final.Entities;
 

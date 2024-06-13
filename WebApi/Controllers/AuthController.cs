@@ -52,7 +52,7 @@ namespace Final.Controllers
                 _config["Jwt:Issuer"],
                 _config["Jwt:Issuer"],
                 claims,
-                expires: DateTime.Now.AddMinutes(120), // Token expiration time
+                expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials
             );
 
@@ -64,17 +64,15 @@ namespace Final.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] AddUserDto addUserDto)
         {
-            // Add user to the database
             await _userService.AddUser(addUserDto);
 
-            // Check if the user being registered is an administrator
-            bool isAdmin = addUserDto.Role == EUserRole.Administrator; // Assuming Role property is present in AddUserDto
+            bool isAdmin = addUserDto.Role == EUserRole.Administrator;
 
-            // Add "Administrator" role claim if the user is an administrator
+
             var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.Name, addUserDto.Email), // Assuming Email is used as the username
-        // Add other claims as needed
+        new Claim(ClaimTypes.Name, addUserDto.Email),
+
     };
 
             if (isAdmin)
@@ -82,7 +80,6 @@ namespace Final.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
             }
 
-            // Generate JWT token
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 

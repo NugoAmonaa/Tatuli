@@ -1,4 +1,5 @@
-﻿using Final.Dto;
+﻿using Final.Domain.Dto;
+using Final.Dto;
 using Final.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ namespace Final.Controllers
 {
     [ApiController]
     [Route("Post")]
-    //[Authorize]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -81,17 +81,18 @@ namespace Final.Controllers
 
         [HttpPut("ChangeStatus")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
-        public async Task<IActionResult> ChangeStatus(UpdatePostDto updatePostDto)
+        public async Task<IActionResult> ChangeStatus(ChangePostStatusDto changePostStatusDto)
         {
-            await _postService.UpdatePost(updatePostDto);
+
+            await _postService.ChangPostStatus(changePostStatusDto);
             return Ok();
         }
 
         [HttpPut("ChangeState")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
-        public async Task<IActionResult> ChangeState(UpdatePostDto updatePostDto)
+        public async Task<IActionResult> ChangeState(ChangePostStateDto changePostStateDto)
         {
-            await _postService.UpdatePost(updatePostDto);
+            await _postService.ChangPostState(changePostStateDto);
             return Ok();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
+using Final.Domain.Dto;
 using Final.Dto;
 using Final.Entities;
 using Final.Enum;
@@ -77,7 +78,7 @@ namespace Final.Services
 
                 }).ToList(),
                 CommentAmount = x.Comments.Count
-            }).ToList();
+            }).Where(x => x.State != EState.Hide).ToList();
 
         }
 
@@ -111,7 +112,7 @@ namespace Final.Services
             }
             if (user.Id != post.Creator.Id)
             {
-                throw new Exception("You can Only update ypur post");
+                throw new Exception("You can only update your post");
 
             }
             post.Name = postDto.Name;
@@ -120,5 +121,25 @@ namespace Final.Services
             await PostRepository.UpdatePost(post);
         }
 
+
+
+        public async Task ChangPostStatus(ChangePostStatusDto post)
+        {
+            var updatedPost = (await PostRepository.GetSinglePost(post.PostID));
+            updatedPost.Status = post.Status;
+
+
+            await PostRepository.UpdatePost(updatedPost);
+
+        }
+
+        public async Task ChangPostState(ChangePostStateDto post)
+        {
+            var updatedPost = (await PostRepository.GetSinglePost(post.PostID));
+            updatedPost.State = post.State;
+
+
+            await PostRepository.UpdatePost(updatedPost);
+        }
     }
 }

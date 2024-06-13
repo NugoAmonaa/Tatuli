@@ -92,6 +92,7 @@ namespace Final
                 var role = new IdentityRole("User");
                 roleManager.CreateAsync(role).Wait();
             }
+        
         }
     }
 }

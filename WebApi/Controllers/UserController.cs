@@ -26,6 +26,7 @@ namespace Final.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         public async Task<IActionResult> AddUser(AddUserDto addUserDto)
         {
             await _userService.AddUser(addUserDto);
@@ -33,6 +34,7 @@ namespace Final.Controllers
         }
 
         [HttpDelete("{email}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
 
         public async Task<IActionResult> DeleteUser(string email)
         {
@@ -41,6 +43,8 @@ namespace Final.Controllers
         }
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> UpdateUser(UpdateUserDto updateUserDto)
         {
             await _userService.UpdateUser(updateUserDto);
@@ -48,6 +52,8 @@ namespace Final.Controllers
         }
 
         [HttpGet("{email}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> GetUser(string email)
         {
             return Ok(await _userService.GetUser(email));
